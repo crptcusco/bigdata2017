@@ -22,11 +22,11 @@ collatzLonAux num suma
   
 collatz :: Integer->Integer
 collatz x
- | x `mod` 2 == 0 = (fromIntegral x) `div` 2
- | otherwise = (3* (fromIntegral x))+1 
+ | x `mod` 2 == 0 = x `div` 2
+ | otherwise = (3 * x)+1 
 
 main = do
 --ENTRADAS
- let num1 = 3 
+ let num1 = 3
 --SAIDA
  print ( collatzLon num1)

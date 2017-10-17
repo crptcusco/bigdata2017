@@ -10,10 +10,15 @@ main :: IO()
 --Declaracion de Funciones
 -- Toma un entero y devuelve si es o no primo
 
+--persisAditive :: Integer -> Integer
+--persisAditive n
+--  | n >= 10 = persisAditive (sumaDigitos(n))  
+--  | otherwise = sumaDigitos(n)
+
 persisAditive :: Integer -> Integer
 persisAditive n
-  | n >= 10 = persisAditive (sumaDigitos(n))  
-  | otherwise = sumaDigitos(n)
+ | n < 10 = 0
+ | otherwise = 1 + persisAditive (sumaDigitos(n))
 
 sumaDigitos :: Integer->Integer
 sumaDigitos a
@@ -26,3 +31,6 @@ main = do
 
 --Salida del Programa
  print (persisAditive num)
+
+
+

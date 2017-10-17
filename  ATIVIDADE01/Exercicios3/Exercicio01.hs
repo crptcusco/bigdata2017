@@ -19,7 +19,7 @@ divisible20 num = expr a b
   b = [1..20]
 expr :: Integer -> [Integer]-> Bool
 expr a [] = True
-expr a (x:lista) = (divisible a x) && (expr a lista)          
+expr a (x:lista) = (divisible a x) && (expr a lista)       
   
 divisible :: Integer -> Integer -> Bool
 divisible a b
@@ -33,7 +33,7 @@ multipli [] = 1
 main = do
 --ENTRADAS
  let num = 40
- 
+
 --SAIDA
  print ( divisible20 num )
  
