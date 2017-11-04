@@ -1,11 +1,11 @@
 {-|
-Module      : ATIVIDADE02
-Description : Bag-of-Words Paralelizado, n-grams, k-skip, tf-idf
-Copyright   : (c) Carlos Portocarrero, 2017
+Module      : BoW
+Description : Bag-of-Words, n-grams, k-skip, tf-idf
+Copyright   : (c) Fabrício Olivetti, 2017
 License     : GPL-3
-Maintainer  : crptcusco@gmail.com
+Maintainer  : fabricio.olivetti@gmail.com
 
-Bag-of-Words Paralelizado, n-grams, k-skip-n-gram, tf, tf-idf
+Bag-of-Words, n-grams, k-skip-n-gram, tf, tf-idf
 -}
 
 module Main where
@@ -14,14 +14,6 @@ import qualified Data.HashMap.Strict as M
 import Data.Char (toLower, isAlphaNum)
 import Data.List (foldl', nub, tails, intercalate)
 import Data.Hashable (Hashable)
-
-import Control.Parallel
-import Control.Monad
-import System.Random
-import Control.Parallel
-import Control.Parallel.Strategies
-import Data.List (foldl')
-import Data.List.Split (chunksOf)
 
 type TF = M.HashMap String Double
 
@@ -35,16 +27,9 @@ tokenize line = preProcess $ words line
 
 -- |
 getTokens :: String -> [[String]]
-getTokens text = notEmpty $ (map tokenize (lines text) `using` parList rseq)
--- getTokens text = notEmpty $ map tokenize $ lines text
+getTokens text = notEmpty $ map tokenize $ lines text
   where
     notEmpty       = filter (not . null)
-
---meanPar :: [[Double]] -> [Double]
---meanPar l = concat lists
--- where
--- lists = map getTokens chunks `using` parList rdeepseq
--- chunks = chunksOf 1000 l
   
 -- |generate 'ngrams' from a sequence of tokens
 ngrams :: Int -> [String] -> [String]
@@ -102,7 +87,7 @@ tfidf tf' df' = map calcTFIDF tf'
 -- |'main' executa programa principal
 main :: IO ()
 main = do
-  let getContents = readFile "baseMix.txt"  
+  let getContents = readFile "baseMix.txt" 
   text <- getContents
 
   let
