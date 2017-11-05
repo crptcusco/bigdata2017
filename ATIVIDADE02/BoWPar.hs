@@ -35,20 +35,16 @@ tokenize line = preProcess $ words line
 
 -- |
 getTokens :: String -> [[String]]
-getTokens text = notEmpty $ (map tokenize (lines text) `using` parList rseq)
+getTokens text = notEmpty $ (map tokenize (lines text) `using` parList rdeepseq)
 -- getTokens text = notEmpty $ map tokenize $ lines text
   where
     notEmpty       = filter (not . null)
 
---meanPar :: [[Double]] -> [Double]
---meanPar l = concat lists
--- where
--- lists = map getTokens chunks `using` parList rdeepseq
--- chunks = chunksOf 1000 l
   
 -- |generate 'ngrams' from a sequence of tokens
 ngrams :: Int -> [String] -> [String]
-ngrams n tokens = map genGram $ grams tokens
+--ngrams n tokens = map genGram $ grams tokens
+ngrams n tokens = map genGram (grams tokens) `using` parList rdeepseq
   where
     genGram       = (intercalate " ") . (take n)
     grams tokens  = sizeN $ tails tokens 
@@ -60,7 +56,8 @@ getNgrams n corpus = map (ngrams n) corpus
 
 
 -- |generate 'skipgrams' of 'k' and 'n' for a sequence of tokens
-skipgrams n k tokens = map (intercalate " ") $ grams tokens
+-- skipgrams n k tokens = map (intercalate " ") $ grams tokens
+skipgrams n k tokens = map (intercalate " ") (grams tokens) `using` parList rdeepseq
   where
     grams tokens  = sizeN $ concat $ map (takeSkips n) $ tails tokens
     takeSkips 0 ws = [[]]
@@ -82,6 +79,7 @@ binarize corpus = map binVec corpus
 -- |'tf' generates the term frequency of a BoW
 tf :: [[String]] -> [TF]
 tf corpus = map countWords corpus
+-- tf corpus = map countWords corpus `using` parList rdeepseq
   where
     countWords doc = M.map (\v -> v / (len doc)) $ M.fromListWith (+) $ zip doc [1,1..]
     len d = fromIntegral $ length d
@@ -91,8 +89,11 @@ df :: [TF] -> TF
 df corpus = foldl' (M.unionWith (+)) M.empty corpus
 
 -- | 'tfidf' of a document
+
+
 tfidf :: [TF] -> TF -> [TF]
 tfidf tf' df' = map calcTFIDF tf'
+-- tfidf tf' df' = map calcTFIDF tf' `using` parList rdeepseq
   where
     calcTFIDF t = M.mapWithKey calc t
     calc k v = v * log (n / (getDF k))
