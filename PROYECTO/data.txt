@@ -1,0 +1,8 @@
+E1 grabado espana moderno si A
+E2 oleo portugal moderno no A
+E3 oleo francia moderno si B
+E4 oleo espana moderno no A
+E5 acuarela espana clasico no A
+E6 acuarela francia clasico si B
+E7 acuarela espana moderno si A
+E8 acuarela portugal clasico si B
